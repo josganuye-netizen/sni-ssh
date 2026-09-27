@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "======================================"
+echo "Daftar Akun SSH:"
+echo "======================================"
+printf "%-15s | %-15s\n" "Username" "Kadaluarsa"
+echo "--------------------------------------"
+
+awk -F: '$3 >= 1000 && $7 == "/bin/false" {print $1}' /etc/passwd | while read USERNAME; do
+    EXP_DATE=$(chage -l "$USERNAME" | grep "Account expires" | cut -d: -f2 | sed 's/^ *//')
+    printf "%-15s | %-15s\n" "$USERNAME" "$EXP_DATE"
+done
+echo "======================================"
